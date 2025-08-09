@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'auth_core',
+    'user_profile',
 ]
 
 MIDDLEWARE = [
@@ -38,6 +39,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'auth_core.middleware.HMACAuthMiddleware',
 ]
 
 ROOT_URLCONF = 'backend_project.urls'
@@ -125,6 +127,24 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTHENTICATION_BACKENDS = [
+    'user_profile.auth_backends.EmailOrUsernameModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+REST_FRAMEWORK = {
+    'DEFAULT_THROTTLE_CLASSES': [
+        # 'auth_core.throttling.APIKeyRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        # You can leave empty or set a default if needed
+    },
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'auth_core.authentication.APIKeyAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
 
 from datetime import timedelta
 
