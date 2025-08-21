@@ -161,9 +161,6 @@ BUSINESS_NAME = os.environ.get('BUSINESS_NAME')
 BUSINESS_LOGO = os.environ.get('BUSINESS_LOGO')
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL')
-BASE_URL = os.environ.get("BASE_URL")
-MEDIA_BASE_URL = os.environ.get('MEDIA_BASE_URL')
-STATIC_BASE_URL = os.environ.get('STATIC_BASE_URL')
 FROM_EMAIL = f"{BUSINESS_NAME} <{EMAIL_HOST_USER}>"
 
 # hmac key 
@@ -172,7 +169,13 @@ HMAC_SECRET_KEY = os.environ.get("HMAC_SECRET_KEY")
 # Models used for order
 PAYMENT_ORDER_MODEL = 'store.Order'
 
-DJANGO_PG_SUCCESS_REDIRECT = 'store:track_order'
-DJANGO_PG_FAILURE_REDIRECT = 'store:create_order'
+# paystack keys
+PAYSTACK_SECRET_KEY = os.environ.get('PAYSTACK_SECRET_KEY')
+PAYSTACK_PUBLIC_KEY = os.environ.get('PAYSTACK_PUBLIC_KEY')
 
-MEDIA_BASE_URL = os.environ.get('MEDIA_BASE_URL')
+# Flutterwave keys
+FLUTTERWAVE_PUBLIC_KEY = os.environ.get('FLUTTERWAVE_PUBLIC_KEY')
+FLUTTERWAVE_SECRET_KEY = os.environ.get('FLUTTERWAVE_SECRET_KEY')
+
+DJANGO_PG_SUCCESS_REDIRECT = ''
+DJANGO_PG_FAILURE_REDIRECT = ''

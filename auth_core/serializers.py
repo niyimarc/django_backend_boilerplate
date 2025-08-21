@@ -19,8 +19,3 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
-
-class BillingAddressSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BillingAddress
-        fields = ['address', 'state', 'city', 'apartment', 'country', 'zip_code']

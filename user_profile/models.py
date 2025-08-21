@@ -81,4 +81,3 @@ class Phone(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['user', 'phone'], name='unique_user_phone')
         ]
-
