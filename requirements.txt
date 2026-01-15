@@ -1,0 +1,15 @@
+asgiref==3.9.1
+Django==5.0.12
+django-autokit==0.2.1
+djangorestframework==3.16.1
+djangorestframework_simplejwt==5.5.1
+PyJWT==2.10.1
+PyMySQL==1.1.1
+python-dotenv==1.1.1
+setuptools==78.1.1
+sqlparse==0.5.3
+tzdata==2025.2
+ua-parser==1.0.1
+ua-parser-builtins==202601
+user-agents==2.2.0
+wheel==0.45.1
