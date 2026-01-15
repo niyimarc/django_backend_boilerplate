@@ -29,6 +29,9 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'auth_core',
     'user_profile',
+    'collaboration',
+    'user_auth_key',
+    'subscriptions',
 ]
 
 MIDDLEWARE = [
@@ -40,6 +43,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'auth_core.middleware.HMACAuthMiddleware',
+    'auth_core.middleware.ApplicationBaseURLValidatorMiddleware',
+    "collaboration.middleware.owner_context.OwnerContextMiddleware",
 ]
 
 ROOT_URLCONF = 'backend_project.urls'
@@ -83,6 +88,9 @@ DATABASES = {
             'charset': 'utf8mb4',
             'init_command': "SET NAMES 'utf8mb4' COLLATE 'utf8mb4_general_ci'"
         },
+        # Connection management
+        'CONN_MAX_AGE': 300,         # keep connections alive up to 5 min
+        'CONN_HEALTH_CHECKS': True,  # test connection before reusing
     }
 }
 
@@ -117,12 +125,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.0/howto/static-files/
-
-STATIC_URL = 'static/'
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
@@ -144,6 +146,9 @@ REST_FRAMEWORK = {
         'auth_core.authentication.APIKeyAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "collaboration.permissions.IsOwner",  # owner-only by default
+    ]
 }
 
 from datetime import timedelta
@@ -179,3 +184,8 @@ FLUTTERWAVE_SECRET_KEY = os.environ.get('FLUTTERWAVE_SECRET_KEY')
 
 DJANGO_PG_SUCCESS_REDIRECT = ''
 DJANGO_PG_FAILURE_REDIRECT = ''
+
+CREDENTIAL_ENCRYPTION_KEYS = {
+    "v1": os.environ.get("CREDENTIAL_KEY_V1", "fallback_secret_key_v1"),  # must be 32 bytes base64
+}
+CREDENTIAL_ENCRYPTION_CURRENT_VERSION = "v1"

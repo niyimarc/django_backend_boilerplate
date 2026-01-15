@@ -13,6 +13,5 @@ class APIKeyAuthentication(BaseAuthentication):
         except APIKey.DoesNotExist:
             raise AuthenticationFailed('Invalid API key')
 
+        request.application = api_key.application
         return None
-
-        

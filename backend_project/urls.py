@@ -5,6 +5,11 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('auth_core.urls')),
+    path('', include('user_profile.urls')),
+    path('', include('collaboration.urls')),
+    path('', include('subscriptions.urls')),
+    path('', include('user_auth_key.urls')),
 ]
 
 if not settings.DEBUG:

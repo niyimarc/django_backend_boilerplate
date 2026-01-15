@@ -34,8 +34,8 @@ class PublicViewMixin:
         return super().dispatch(*args, **kwargs)
     
 class PrivateUserViewMixin:
-    # authentication_classes = [JWTAuthentication]
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [APIKeyAuthentication, JWTAuthentication]
+    permission_classes = [IsAuthenticated]
     throttle_classes = [PermanentBlacklistThrottle, APIKeyRateThrottle, UserRateThrottle]
 
 class LoginAPIView(PublicViewMixin, APIView):
@@ -56,6 +56,8 @@ class LoginAPIView(PublicViewMixin, APIView):
 class RegisterView(PublicViewMixin, APIView):    
     throttle_classes = [PermanentBlacklistThrottle, APIKeyRateThrottle, RegisterRateThrottle]
     def post(self, request):
+        # print("Raw body:", request.body.decode(errors="ignore"))
+        # print("Parsed data:", request.data)
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
@@ -64,6 +66,7 @@ class RegisterView(PublicViewMixin, APIView):
                 "username": user.username,
                 "email": user.email
             }, status=status.HTTP_201_CREATED)
+        # print("Validation errors:", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class LogoutView(PrivateUserViewMixin, APIView):
@@ -73,7 +76,7 @@ class LogoutView(PrivateUserViewMixin, APIView):
 
     def post(self, request):
         refresh_token = request.data.get("refresh")
-        print(refresh_token)
+        # print(refresh_token)
         if not refresh_token:
             return Response({"detail": "Refresh token required"}, status=400)
 

@@ -4,6 +4,7 @@ import secrets
 
 class Application(models.Model):
     name = models.CharField(max_length=100)
+    base_url = models.URLField(blank=True, null=True)
     description = models.TextField(blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)

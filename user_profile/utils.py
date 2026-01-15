@@ -2,7 +2,7 @@ import uuid
 from datetime import timedelta
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
-from django.urls import reverse
+from django.conf import settings
 from django.utils import timezone
 from django.shortcuts import redirect
 from user_agents import parse
@@ -12,9 +12,16 @@ def generate_verification_token(profile):
         profile.verification_token = uuid.uuid4()
     return str(profile.verification_token)
 
+
 def get_verification_url(profile):
+    """
+    Generate the frontend-facing verification link.
+    Example: http://127.0.0.1:8001/auth/verify_email/<token>/
+    """
     token = generate_verification_token(profile)
-    return reverse('user_profile:verify_email', kwargs={'token': token})
+    base_frontend_url = getattr(settings, "FRONTEND_BASE_URL", "").rstrip("/")
+    return f"{base_frontend_url}/auth/verify_email/{token}/"
+
 
 def generate_password_reset_token(profile):
     if profile.password_reset_token and is_password_reset_token_valid(profile):
@@ -25,10 +32,17 @@ def generate_password_reset_token(profile):
     profile.save()
     return str(profile.password_reset_token)
 
+
 def get_password_reset_token_url(profile):
+    """
+    Generate the frontend-facing password reset link.
+    Example: http://127.0.0.1:8001/auth/reset_password/<uidb64>/<token>/
+    """
     uidb64 = urlsafe_base64_encode(force_bytes(profile.user.id))
     token = generate_password_reset_token(profile)
-    return reverse('user_profile:set_password', kwargs={'uidb64': uidb64, 'token': token})
+    base_frontend_url = getattr(settings, "FRONTEND_BASE_URL", "").rstrip("/")
+    return f"{base_frontend_url}/auth/reset_password/{uidb64}/{token}/"
+
 
 def is_password_reset_token_valid(profile):
     if profile.password_reset_token_created_on:

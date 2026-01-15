@@ -37,9 +37,6 @@ class Profile(models.Model):
     def is_password_reset_token_valid(self):
         return utils.is_password_reset_token_valid(self)
 
-    def verification_progress(self):
-        return utils.verification_progress(self)
-
 class UserActivity(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     login_time = models.DateTimeField(default=timezone.now)
